@@ -1082,7 +1082,7 @@ function fireLaserBeam(sx,sy,tx,ty,cb){
   beam.setAttribute('fill','none');
   beam.setAttribute('stroke-linecap','round');
   beam.setAttribute('opacity','0.85');
-  const len=beam.getTotalLength?beam.getTotalLength():dist;
+  const len=dist;
   beam.style.strokeDasharray=len;
   beam.style.strokeDashoffset=len;
   beam.style.transition='stroke-dashoffset 0.35s cubic-bezier(.4,0,.2,1)';
