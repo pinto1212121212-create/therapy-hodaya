@@ -581,7 +581,7 @@ const localStore={
 };
 
 // ── Constants ─────────────────────────────────────────
-const HOLS={"2024-10-02":"ראש השנה","2024-10-03":"ראש השנה","2024-10-11":"יום כיפור","2024-10-16":"סוכות","2024-10-22":"הוש׳ רבה","2024-10-23":"שמ׳ עצרת","2024-12-25":"חנוכה","2024-12-26":"חנוכה","2024-12-27":"חנוכה","2024-12-28":"חנוכה","2024-12-29":"חנוכה","2024-12-30":"חנוכה","2024-12-31":"חנוכה","2025-01-01":"חנוכה","2025-02-12":'ט"ו בשבט',"2025-03-13":"פורים","2025-04-12":"פסח","2025-04-13":"פסח","2025-04-19":"ז׳ פסח","2025-04-24":"יום השואה","2025-04-30":"יום הזיכרון","2025-05-01":"יום העצמאות","2025-05-15":'ל"ג בעומר',"2025-06-01":"שבועות","2025-06-02":"שבועות","2025-08-02":"ט׳ באב","2025-09-22":"ראש השנה","2025-09-23":"ראש השנה","2025-10-01":"יום כיפור","2025-10-06":"סוכות","2025-10-12":"הוש׳ רבה","2025-10-13":"שמ׳ עצרת","2025-12-14":"חנוכה","2025-12-15":"חנוכה","2025-12-16":"חנוכה","2025-12-17":"חנוכה","2025-12-18":"חנוכה","2025-12-19":"חנוכה","2025-12-20":"חנוכה","2025-12-21":"חנוכה","2026-02-01":'ט"ו בשבט',"2026-03-02":"פורים","2026-04-01":"פסח","2026-04-02":"פסח","2026-04-08":"ז׳ פסח","2026-04-13":"יום השואה","2026-04-20":"יום הזיכרון","2026-04-21":"יום העצמאות","2026-05-04":'ל"ג בעומר',"2026-05-21":"שבועות","2026-05-22":"שבועות","2026-07-22":"ט׳ באב"};
+const HOLS={_devTaps:0,"2024-10-02":"ראש השנה","2024-10-03":"ראש השנה","2024-10-11":"יום כיפור","2024-10-16":"סוכות","2024-10-22":"הוש׳ רבה","2024-10-23":"שמ׳ עצרת","2024-12-25":"חנוכה","2024-12-26":"חנוכה","2024-12-27":"חנוכה","2024-12-28":"חנוכה","2024-12-29":"חנוכה","2024-12-30":"חנוכה","2024-12-31":"חנוכה","2025-01-01":"חנוכה","2025-02-12":'ט"ו בשבט',"2025-03-13":"פורים","2025-04-12":"פסח","2025-04-13":"פסח","2025-04-19":"ז׳ פסח","2025-04-24":"יום השואה","2025-04-30":"יום הזיכרון","2025-05-01":"יום העצמאות","2025-05-15":'ל"ג בעומר',"2025-06-01":"שבועות","2025-06-02":"שבועות","2025-08-02":"ט׳ באב","2025-09-22":"ראש השנה","2025-09-23":"ראש השנה","2025-10-01":"יום כיפור","2025-10-06":"סוכות","2025-10-12":"הוש׳ רבה","2025-10-13":"שמ׳ עצרת","2025-12-14":"חנוכה","2025-12-15":"חנוכה","2025-12-16":"חנוכה","2025-12-17":"חנוכה","2025-12-18":"חנוכה","2025-12-19":"חנוכה","2025-12-20":"חנוכה","2025-12-21":"חנוכה","2026-02-01":'ט"ו בשבט',"2026-03-02":"פורים","2026-04-01":"פסח","2026-04-02":"פסח","2026-04-08":"ז׳ פסח","2026-04-13":"יום השואה","2026-04-20":"יום הזיכרון","2026-04-21":"יום העצמאות","2026-05-04":'ל"ג בעומר',"2026-05-21":"שבועות","2026-05-22":"שבועות","2026-07-22":"ט׳ באב"};
 const MO=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
 const TREAT_AREAS=[
   {id:'general',label:'כללי',full:true},
@@ -635,7 +635,7 @@ const hd=(y,m,d)=>{try{return new Date(y,m-1,d).toLocaleDateString('he-IL-u-ca-h
 const x=(s)=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
 // ── State ─────────────────────────────────────────────
-const S={
+const S={_devTaps:0,
   screen:'home', // home | diary
   // personal tasks
     // diary
@@ -894,12 +894,49 @@ function laserModal(){
 }
 
 // ── Main Render ───────────────────────────────────────
+function deployToGitHub(){
+  const token=localStorage.getItem('gh_token')||'';
+  if(!token){
+    const t=prompt('הכנס GitHub Token (נשמר בטלפון שלך בלבד):');
+    if(!t)return;
+    localStorage.setItem('gh_token',t.trim());
+  }
+  const ghToken=localStorage.getItem('gh_token');
+  // Get current file content from GitHub first (need SHA)
+  const apiUrl='https://api.github.com/repos/pinto1212121212-create/therapy-hodaya/contents/index.html';
+  const btn=document.getElementById('deploy-btn');
+  if(btn){btn.textContent='⏳ מעלה...';btn.disabled=true;}
+  fetch(apiUrl,{headers:{'Authorization':'token '+ghToken,'Accept':'application/vnd.github.v3+json'}})
+    .then(r=>r.json())
+    .then(data=>{
+      const sha=data.sha;
+      // Get current HTML content
+      const html=document.documentElement.outerHTML;
+      const encoded=btoa(unescape(encodeURIComponent(html)));
+      return fetch(apiUrl,{
+        method:'PUT',
+        headers:{'Authorization':'token '+ghToken,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+        body:JSON.stringify({message:'Update from app',content:encoded,sha})
+      });
+    })
+    .then(r=>r.json())
+    .then(()=>{
+      if(btn){btn.textContent='✅ עלה בהצלחה!';btn.style.background='#059669';}
+      setTimeout(()=>{if(btn){btn.textContent='🚀 פרסם עדכון';btn.disabled=false;btn.style.background='';}},3000);
+    })
+    .catch(()=>{
+      localStorage.removeItem('gh_token');
+      if(btn){btn.textContent='❌ שגיאה — נסה שוב';btn.disabled=false;}
+      setTimeout(()=>{if(btn){btn.textContent='🚀 פרסם עדכון';}},3000);
+    });
+}
+
 function render(){
   let h='';
   if(S.screen==='home'){
     h=`<div class="home">
       <button id="pwa-install-btn" class="pwa-btn" onclick="installPWA()">📲 הוסף למסך הבית</button>
-      <div class="home-title"><h1>💙 מרפאת הנפש</h1><p>הודיה | טיפול רגשי מקצועי</p></div>
+      <div class="home-title"><h1 onclick="S._devTaps=(S._devTaps||0)+1;if(S._devTaps>=5)render()">💙 מרפאת הנפש</h1><p>הודיה | טיפול רגשי מקצועי</p></div>
       <div style="display:flex;justify-content:center;padding:0 16px">
         <button class="card" style="background:linear-gradient(135deg,#0d9488,#0f766e);color:white;max-width:340px;width:100%;padding:32px 24px;border-radius:24px;border:none;cursor:pointer;font-family:inherit;box-shadow:0 8px 32px rgba(13,148,136,.4)" onclick="S.screen='diary';render()">
           <div style="font-size:48px;margin-bottom:12px">💙</div>
@@ -907,6 +944,7 @@ function render(){
           <div style="font-size:14px;opacity:.8">ניהול מפגשים ומטופלים</div>
         </button>
       </div>
+      ${S._devTaps>=5?`<div style="position:fixed;top:12px;left:12px;z-index:999"><button id="deploy-btn" onclick="deployToGitHub()" style="background:rgba(13,148,136,0.15);color:#5eead4;border:1px solid rgba(94,234,212,0.3);border-radius:50%;width:32px;height:32px;font-size:14px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0">🚀</button></div>`:''}
     </div>`;
   } else if(S.screen==='diary'){
     const tabs=[{i:'🧘',l:'מפגשים'},{i:'✅',l:'משימות'},{i:'🎯',l:'מטרות'}];
@@ -2121,7 +2159,7 @@ function savePkg(){
   const name=(document.getElementById('pk-name')||{}).value||'';
   if(!name.trim()){alert('נא להזין שם לקוח');return;}
   const id='pkg_'+Date.now();
-  if(!S.PKGS)S.PKGS={};
+  if(!S.PKGS)S.PKGS={_devTaps:0,};
   S.PKGS[id]={
     name,
     type:(document.getElementById('pk-type')||{}).value||'',
