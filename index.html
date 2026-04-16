@@ -220,10 +220,10 @@ textarea.task-modal-area{width:100%;border:1.5px solid #e5e7eb;border-radius:12p
 .goal-type-btn{padding:9px;border-radius:12px;border:1.5px solid #f0fdfa;background:#f0fdfa;color:#6b7280;font-size:12px;font-weight:700;cursor:pointer;text-align:center;font-family:inherit}
 .goal-type-btn.on{border-color:#0d9488;background:#f0fdfa;color:#0d9488}
 /* CRM */
-.crm-search-row{display:flex;gap:8px;margin-bottom:12px}
-.crm-search-inp{flex:1;border:1.5px solid #f0fdfa;border-radius:12px;padding:10px 14px;font-size:14px;outline:none;background:white;text-align:right;font-family:inherit}
-.crm-search-inp:focus{border-color:#0d9488}
-.crm-add-btn{background:#0d9488;color:white;border:none;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:800;cursor:pointer;flex-shrink:0;font-family:inherit}
+.crm-search-wrap{display:flex;align-items:center;gap:8px;margin-bottom:12px;background:white;border:1.5px solid #f0fdfa;border-radius:16px;padding:6px 6px 6px 14px;box-shadow:0 2px 12px rgba(13,148,136,.08);transition:border .2s}
+.crm-search-wrap:focus-within{border-color:#0d9488;box-shadow:0 2px 16px rgba(13,148,136,.18)}
+.crm-search-icon{font-size:16px;flex-shrink:0;opacity:.5}
+.crm-search-inp{flex:1;border:none;padding:8px 0;font-size:15px;outline:none;background:transparent;text-align:right;font-family:inherit;color:#134e4a;min-width:0}.crm-clear-btn{background:none;border:none;color:#9ca3af;font-size:16px;cursor:pointer;padding:4px 6px;border-radius:50%;flex-shrink:0;font-family:inherit}
 .crm-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
 .crm-stat{background:white;border-radius:12px;padding:10px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .crm-stat-val{font-size:18px;font-weight:900;color:#0d9488}
@@ -1458,13 +1458,19 @@ function renderCRM(){
     return tags2.includes('problematic')||tags2.includes('nopay')||hasDebt2;
   });
 
-  let h=`<div class="crm-search-row"><input class="crm-search-inp" placeholder="🔍 חיפוש מטופל..." value="${x(S.crmSearch)}" oninput="S.crmSearch=this.value;updateCrmList()"><button class="crm-add-btn" onclick="openNewClient()">+ חדש</button></div>
+  let h=`<div class="crm-search-wrap">
+    <span class="crm-search-icon">🔍</span>
+    <input class="crm-search-inp" id="crm-search-input" placeholder="חיפוש לפי שם או טלפון..." value="${x(S.crmSearch)}" oninput="filterCrmOnly(this.value)" onkeydown="if(event.key==='Escape'){filterCrmOnly('');this.value=''}">
+    ${S.crmSearch?`<button class="crm-clear-btn" onclick="filterCrmOnly('');document.getElementById('crm-search-input').value=''">✕</button>`:''}
+    <button class="crm-add-btn" onclick="openNewClient()">+ חדש</button>
+  </div>
   <div class="crm-filter-pills">
     <button class="crm-pill${S.crmFilter==='all'?' on':''}" onclick="S.crmFilter='all';crmRender()">👥 כולם <span class="crm-pill-badge">${clients.length}</span></button>
     <button class="crm-pill blue${S.crmFilter==='returning'?' on':''}" onclick="S.crmFilter='returning';crmRender()">🔄 חוזרים <span class="crm-pill-badge">${returningClients.length}</span></button>
     <button class="crm-pill red${S.crmFilter==='problematic'?' on':''}" onclick="S.crmFilter='problematic';crmRender()">⚠️ בעייתיים <span class="crm-pill-badge">${problematicClients.length}</span></button>
   </div>
-  <div class="crm-stats"><div class="crm-stat"><div class="crm-stat-val">${displayClients.length}</div><div class="crm-stat-lbl">מוצגים</div></div><div class="crm-stat"><div class="crm-stat-val">${totV}</div><div class="crm-stat-lbl">טיפולים</div></div><div class="crm-stat"><div class="crm-stat-val">₪${Math.round(totRev/1000)}K</div><div class="crm-stat-lbl">הכנסות</div></div></div>`;
+  <div class="crm-stats"><div class="crm-stat"><div class="crm-stat-val">${displayClients.length}</div><div class="crm-stat-lbl">מוצגים</div></div><div class="crm-stat"><div class="crm-stat-val">${totV}</div><div class="crm-stat-lbl">טיפולים</div></div><div class="crm-stat"><div class="crm-stat-val">₪${Math.round(totRev/1000)}K</div><div class="crm-stat-lbl">הכנסות</div></div></div>
+  <div id="crm-list-results">`;
   if(!displayClients.length){h+=`<div class="empty-state"><span class="empty-icon">👥</span>${S.crmFilter!=='all'?'אין לקוחות בקטגוריה זו':q?'לא נמצאו':'אין מטופלים עדיין'}</div>`;}
   else{h+=displayClients.map(([k,c])=>{const last=c.visits.sort((a,b)=>b.date.localeCompare(a.date))[0];const ini=c.name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();const hasSens=(S.CL?.[k]?.sens||[]).length>0;return`<div class="client-card" style="flex-direction:column;align-items:stretch;gap:10px">
   <div style="display:flex;gap:12px;align-items:center">
@@ -1486,7 +1492,7 @@ function renderCRM(){
   </div>
 
 </div>`;}).join('');}
-  h+=`</div>`;
+  h+=`</div></div>`;
   if(S.openClient!==null){
     const k=S.openClient,c=cm[k]||{name:k,visits:[],total:0},cd=S.CL?.[k]||{};
     const ini=(c.name||'').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
@@ -1522,6 +1528,24 @@ ${debtAlertHTML(c.name)}
 }
 function updateCrmList(){crmRender();}
 function crmRender(){const hc=document.querySelector('.hist-content');if(hc&&S.showHistory)hc.innerHTML=renderCRM();else hRender();}
+window.filterCrmOnly=function(val){
+  S.crmSearch=val;
+  const el=document.getElementById('crm-list-results');
+  if(!el){crmRender();return;}
+  const cm={};
+  Object.entries(S.A).forEach(([date,slots])=>{Object.entries(slots||{}).forEach(([time,d])=>{if(!d||!d.name)return;const k=d.phone||d.name;if(!cm[k])cm[k]={name:d.name,phone:d.phone||'',visits:[],total:0};cm[k].visits.push({date,time,...d});if(d.price)cm[k].total+=Number(d.price)||0;});});
+  Object.entries(S.CL||{}).forEach(([k,cd])=>{if(!cm[k])cm[k]={name:cd.name||k,phone:cd.phone||'',visits:[],total:0};Object.assign(cm[k],{notes:cd.notes,sens:cd.sens,bday:cd.bday,email:cd.email});});
+  const clients=Object.entries(cm).sort((a,b)=>{const la=(a[1].visits.sort((p,q)=>q.date.localeCompare(p.date))[0]||{}).date||'';const lb=(b[1].visits.sort((p,q)=>q.date.localeCompare(p.date))[0]||{}).date||'';return lb.localeCompare(la);});
+  const q=val.toLowerCase();
+  let display=q?clients.filter(([,c])=>c.name.toLowerCase().includes(q)||(c.phone||'').includes(q)):clients;
+  if(S.crmFilter==='returning')display=display.filter(([,c])=>c.visits.length>=2);
+  else if(S.crmFilter==='problematic')display=display.filter(([k,c])=>{const cd2=S.CL?.[k]||{};const tags2=cd2.tags||[];const hasDebt2=c.visits.some(v=>v.price&&Number(v.price)>0&&!v.paid&&new Date(v.date+'T'+v.time)<=new Date());return tags2.includes('problematic')||tags2.includes('nopay')||hasDebt2;});
+  if(!display.length){el.innerHTML=`<div class="empty-state"><span class="empty-icon">👥</span>${q?'לא נמצאו תוצאות':'אין מטופלים'}</div>`;return;}
+  el.innerHTML=display.map(([k,c])=>{const last=c.visits.sort((a,b)=>b.date.localeCompare(a.date))[0];const ini=c.name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();return`<div class="client-card" onclick="openClientProfile('${x(k)}')" style="flex-direction:row;gap:12px;align-items:center"><div class="client-avatar">${ini||'👤'}</div><div class="client-info" style="flex:1"><div class="client-name">${x(c.name)}</div><div class="client-phone">${x(c.phone||'')}</div><div class="client-tags">${last?`<span class="client-tag">📅 ${last.date}</span>`:''}<span class="client-tag">${c.visits.length} ביקורים</span></div></div><div class="client-total"><div class="client-total-val">₪${c.total.toLocaleString()}</div><div class="client-total-lbl">סה"כ</div></div></div>`;}).join('');
+  const clearBtn=document.querySelector('.crm-clear-btn');
+  if(val&&!clearBtn){const inp=document.getElementById('crm-search-input');if(inp){const btn=document.createElement('button');btn.className='crm-clear-btn';btn.textContent='✕';btn.onclick=()=>{window.filterCrmOnly('');inp.value='';};inp.parentNode.insertBefore(btn,inp.nextSibling);}}
+  else if(!val&&clearBtn)clearBtn.remove();
+};
 function openClientProfile(k){S.openClient=k;S.editClient=false;crmRender();}
 function openNewClient(){const k='new_'+Date.now();if(!S.CL)S.CL={};S.CL[k]={name:'',phone:'',notes:'',sens:[]};S.openClient=k;S.editClient=true;crmRender();}
 function toggleSens(k,s){if(!S.CL)S.CL={};if(!S.CL[k])S.CL[k]={sens:[]};if(!S.CL[k].sens)S.CL[k].sens=[];const arr=S.CL[k].sens,idx=arr.indexOf(s);if(idx>=0)arr.splice(idx,1);else arr.push(s);store.set('clients',S.CL);crmRender();}
@@ -2612,9 +2636,11 @@ async function quickDeploy(){
     localStorage.setItem('gh_deploy_token',token);
   }
   const btn=document.getElementById('deploy-fab-btn');
-  btn.textContent='⏳ מפרסם...';btn.disabled=true;
+  const fab=document.getElementById('deploy-fab');
+  fab.style.display='none';
+  const html=document.documentElement.outerHTML;
+  fab.style.display='block';btn.textContent='⏳ מפרסם...';btn.disabled=true;
   try{
-    const html=document.documentElement.outerHTML;
     const encoded=btoa(unescape(encodeURIComponent(html)));
     const owner='pinto1212121212-create';
     const repo='therapy-hodaya';
