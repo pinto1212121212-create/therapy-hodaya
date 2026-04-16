@@ -902,34 +902,40 @@ function deployToGitHub(){
     localStorage.setItem('gh_token',t.trim());
   }
   const ghToken=localStorage.getItem('gh_token');
-  // Get current file content from GitHub first (need SHA)
   const apiUrl='https://api.github.com/repos/pinto1212121212-create/therapy-hodaya/contents/index.html';
   const btn=document.getElementById('deploy-btn');
-  if(btn){btn.textContent='⏳ מעלה...';btn.disabled=true;}
-  fetch(apiUrl,{headers:{'Authorization':'token '+ghToken,'Accept':'application/vnd.github.v3+json'}})
-    .then(r=>r.json())
-    .then(data=>{
-      const sha=data.sha;
-      // Get current HTML content
-      const html=document.documentElement.outerHTML;
-      const encoded=btoa(unescape(encodeURIComponent(html)));
-      return fetch(apiUrl,{
-        method:'PUT',
-        headers:{'Authorization':'token '+ghToken,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-        body:JSON.stringify({message:'Update from app',content:encoded,sha})
-      });
-    })
-    .then(r=>r.json())
-    .then(()=>{
-      if(btn){btn.textContent='✅ עלה בהצלחה!';btn.style.background='#059669';}
-      setTimeout(()=>{if(btn){btn.textContent='🚀 פרסם עדכון';btn.disabled=false;btn.style.background='';}},3000);
-    })
-    .catch(()=>{
-      localStorage.removeItem('gh_token');
-      if(btn){btn.textContent='❌ שגיאה — נסה שוב';btn.disabled=false;}
-      setTimeout(()=>{if(btn){btn.textContent='🚀 פרסם עדכון';}},3000);
-    });
+  // Create file input
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='.html';
+  inp.onchange=e=>{
+    const file=e.target.files[0];
+    if(!file)return;
+    if(btn){btn.textContent='⏳';btn.disabled=true;}
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const content=ev.target.result;
+      const encoded=btoa(unescape(encodeURIComponent(content)));
+      fetch(apiUrl,{headers:{'Authorization':'token '+ghToken,'Accept':'application/vnd.github.v3+json'}})
+        .then(r=>r.json())
+        .then(data=>{
+          const sha=data.sha||undefined;
+          const body={message:'Update from app',content:encoded};
+          if(sha)body.sha=sha;
+          return fetch(apiUrl,{method:'PUT',headers:{'Authorization':'token '+ghToken,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+        })
+        .then(r=>r.json())
+        .then(d=>{
+          if(d.content){if(btn){btn.textContent='✅';btn.style.background='#059669';}setTimeout(()=>{if(btn){btn.textContent='🚀';btn.disabled=false;btn.style.background='';}},3000);}
+          else{localStorage.removeItem('gh_token');if(btn){btn.textContent='❌';btn.disabled=false;}setTimeout(()=>{if(btn){btn.textContent='🚀';}},3000);}
+        })
+        .catch(()=>{localStorage.removeItem('gh_token');if(btn){btn.textContent='❌';btn.disabled=false;}setTimeout(()=>{if(btn){btn.textContent='🚀';}},3000);});
+    };
+    reader.readAsText(file);
+  };
+  inp.click();
 }
+
+
 
 function render(){
   let h='';
