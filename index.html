@@ -2061,6 +2061,38 @@ function daConfirm(s){
     diaryRender();
   }
 }
+// Generic delete appointment from any screen (accepts date + slot)
+function daFromList(date,slot){
+  if(!S.A[date]||!S.A[date][slot])return;
+  const d=S.A[date][slot];
+  if(!confirm('למחוק את התור של '+(d.name||'מטופלת')+'?\n\n📅 '+date+' · '+slot+'\nהפעולה אינה הפיכה.'))return;
+  delete S.A[date][slot];
+  if(!Object.keys(S.A[date]).length)delete S.A[date];
+  store.set('appts',S.A);
+  hRender();
+}
+// Cancel appointment (save to history) from the upcoming list
+function cancelFromList(date,slot){
+  if(!S.A[date]||!S.A[date][slot])return;
+  const d=S.A[date][slot];
+  const modal=document.createElement('div');
+  modal.className='canc-modal';
+  modal.id='canc-modal';
+  modal.innerHTML=`<div class="canc-sheet"><div class="canc-title">❌ ביטול תור</div><div class="canc-sub">${x(d.name||slot)} — ${date} ${slot}</div><div class="canc-reason-grid"><button class="canc-reason-btn" onclick="recordCancellationFromList('${date}','${slot}','client');document.getElementById('canc-modal').remove()">😞 ביטלה המטופלת</button><button class="canc-reason-btn orange" onclick="recordCancellationFromList('${date}','${slot}','noshow');document.getElementById('canc-modal').remove()">🚫 לא הגיעה</button><button class="canc-reason-btn purple" onclick="recordCancellationFromList('${date}','${slot}','me');document.getElementById('canc-modal').remove()">👤 ביטלתי אני</button><button class="canc-reason-btn gray" onclick="recordCancellationFromList('${date}','${slot}','other');document.getElementById('canc-modal').remove()">📝 סיבה אחרת</button></div><button onclick="document.getElementById('canc-modal').remove()" style="width:100%;padding:12px;background:#f3f4f6;border:none;border-radius:14px;font-weight:700;cursor:pointer;font-family:inherit;color:#374151">ביטול</button></div>`;
+  document.body.appendChild(modal);
+}
+function recordCancellationFromList(date,slot,reason){
+  if(!S.A[date]||!S.A[date][slot])return;
+  const d=S.A[date][slot];
+  const id='c_'+Date.now();
+  if(!S.CANC)S.CANC={};
+  S.CANC[id]={date,time:slot,name:d.name||'',phone:d.phone||'',type:d.type||'',price:d.price||'',duration:d.duration||'',reason,created:new Date().toISOString()};
+  delete S.A[date][slot];
+  if(!Object.keys(S.A[date]).length)delete S.A[date];
+  store.set('appts',S.A);
+  store.set('cancellations',S.CANC);
+  hRender();
+}
 function openEdit(slot){
   const d=(S.A[S.lSel]||{})[slot]||{};
   S.lEditSlot=slot;
@@ -2369,6 +2401,8 @@ function buildUpcoming(upcoming){
               ${a.d.paid?'<span style="font-size:10px;font-weight:700;color:#059669;background:#f0fdf4;padding:2px 6px;border-radius:8px">✓ שולם</span>':''}
               ${reminderBtn(a)}
               ${contactBtns(a.d.phone,a.d.name,a.date+' '+a.time)}
+              <button onclick="cancelFromList('${a.date}','${a.time}')" title="ביטול תור (שמירה בהיסטוריית ביטולים)" style="background:#fff7ed;border:1px solid #fed7aa;color:#c2410c;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;flex-shrink:0">❌</button>
+              <button onclick="daFromList('${a.date}','${a.time}')" title="מחיקה מיידית (ללא שמירה)" style="background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;flex-shrink:0">🗑</button>
             </div>
             <div style="text-align:right">
               <div class="appt-card-name">${x(a.d.name)}${isNext?' ⚡':''}</div>
@@ -5891,9 +5925,9 @@ function renderPromoTab(){
 }
 
 // ── Website Tab — פרסום פשוט כמו הצינור ──
-const WEB_REPO='rb-prolaser';
+const WEB_REPO='beit-laregesh';
 const WEB_OWNER='pinto1212121212-create';
-const WEB_LIVE_URL='https://pinto1212121212-create.github.io/rb-prolaser/';
+const WEB_LIVE_URL='https://pinto1212121212-create.github.io/beit-laregesh/';
 
 function webToast(msg,isErr){
   document.querySelectorAll('.web-toast').forEach(e=>e.remove());
@@ -7041,7 +7075,7 @@ function webDownloadEdit(){
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
     a.href=url;
-    a.download='rb-prolaser-index.html';
+    a.download='beit-laregesh-index.html';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -8281,7 +8315,7 @@ async function webDownloadQR(){
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
     a.href=url;
-    a.download='rb-prolaser-qr.png';
+    a.download='beit-laregesh-qr.png';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
