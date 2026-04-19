@@ -1820,7 +1820,7 @@ function deployToGitHub(){
     localStorage.setItem('gh_token_diary',t.trim());
   }
   const ghToken=localStorage.getItem('gh_token_diary');
-  const apiUrl='https://api.github.com/repos/pinto1212121212-create/therapy-hodaya/contents/index.html';
+  const apiUrl='https://api.github.com/repos/pinto1212121212-create/diary-hodaya/contents/index.html';
   const btn=document.getElementById('deploy-btn');
   const inp=document.createElement('input');
   inp.type='file';inp.accept='.html';
@@ -4798,7 +4798,7 @@ function downloadApptICS(encodedAppt,minutesBefore){
                   dt.getUTCMinutes().toString().padStart(2,'0')+
                   dt.getUTCSeconds().toString().padStart(2,'0')+'Z';
   
-  const uid=apptId+'@therapy-hodaya';
+  const uid=apptId+'@diary-hodaya';
   const summary=`${appt.name||'תור'}${appt.type?' - '+appt.type:''}`;
   const description=`מטופלת: ${appt.name||''}\\n${appt.type?'טיפול: '+appt.type+'\\n':''}${appt.phone?'טלפון: '+appt.phone+'\\n':''}${appt.price?'מחיר: ₪'+appt.price:''}`;
   
@@ -4888,7 +4888,7 @@ async function enableBrowserReminder(apptId,encodedAppt,minutesBefore){
     try{
       new Notification(`🔔 תור בעוד ${minutesBefore>=1440?(minutesBefore/1440)+' יום':minutesBefore>=60?(minutesBefore/60)+' שעות':minutesBefore+' דקות'}`,{
         body:`${appt.name} · ${appt.time}${appt.type?' · '+appt.type:''}`,
-        icon:'https://pinto1212121212-create.github.io/therapy-hodaya/favicon.png',
+        icon:'https://pinto1212121212-create.github.io/diary-hodaya/favicon.png',
         tag:apptId,
         requireInteraction:true
       });
@@ -5986,7 +5986,7 @@ async function webUpload(input){
     if(needCreateRepo){
       pb.style.width='40%';step.textContent='🏗️ יוצר את הריפו '+WEB_REPO+'...';
       const cr=await fetch('https://api.github.com/user/repos',{method:'POST',headers:hdrJson,
-        body:JSON.stringify({name:WEB_REPO,private:false,auto_init:false,description:'RB Pro Laser website'})});
+        body:JSON.stringify({name:WEB_REPO,private:false,auto_init:false,description:'Beit LaRegesh — emotional therapy clinic website'})});
       const crd=await cr.json();
       if(cr.status===401){localStorage.removeItem('gh_deploy_token');throw new Error('הטוקן לא תקף');}
       if(!cr.ok){
@@ -8768,7 +8768,7 @@ async function quickDeploy(){
   try{
     const encoded=btoa(unescape(encodeURIComponent(html)));
     const owner='pinto1212121212-create';
-    const repo='therapy-hodaya';
+    const repo='diary-hodaya';
     const apiUrl=`https://api.github.com/repos/${owner}/${repo}/contents/index.html`;
     const r=await fetch(apiUrl,{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json'}});
     const data=await r.json();
