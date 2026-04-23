@@ -12,7 +12,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.emailjs.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://diary-hodaya-default-rtdb.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.anthropic.com https://api.emailjs.com https://api.github.com https://raw.githubusercontent.com; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.emailjs.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://diary-daniel-rinat-default-rtdb.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.anthropic.com https://api.emailjs.com https://api.github.com https://raw.githubusercontent.com; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 
 <!-- ═══ PWA Manifest — embedded as data URL for single-file deploy ═══ -->
 <link rel="manifest" href='data:application/json;charset=utf-8,{"name":"היומן של הודיה — ניהול קליניקה","short_name":"היומן של הודיה","description":"מערכת לניהול קליניקה — תורים, מטופלות, הכנסות ויעדים","start_url":".","scope":".","display":"standalone","orientation":"portrait","background_color":"%23a855f7","theme_color":"%237c3aed","lang":"he","dir":"rtl","categories":["business","productivity","lifestyle"],"prefer_related_applications":false,"icons":[{"src":"data:image/svg%2Bxml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Cdefs%3E%3ClinearGradient id=%27g%27 x1=%270%27 y1=%270%27 x2=%271%27 y2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%23a855f7%27/%3E%3Cstop offset=%270.5%27 stop-color=%27%237c3aed%27/%3E%3Cstop offset=%271%27 stop-color=%27%236d28d9%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%27512%27 height=%27512%27 rx=%27115%27 fill=%27url(%23g)%27/%3E%3Ccircle cx=%27100%27 cy=%27100%27 r=%27120%27 fill=%27white%27 opacity=%270.08%27/%3E%3Ccircle cx=%27440%27 cy=%27440%27 r=%27140%27 fill=%27white%27 opacity=%270.06%27/%3E%3Ctext x=%27256%27 y=%27340%27 font-size=%27260%27 text-anchor=%27middle%27%3E%F0%9F%93%96%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml","purpose":"any"},{"src":"data:image/svg%2Bxml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Cdefs%3E%3ClinearGradient id=%27g%27 x1=%270%27 y1=%270%27 x2=%271%27 y2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%23a855f7%27/%3E%3Cstop offset=%270.5%27 stop-color=%27%237c3aed%27/%3E%3Cstop offset=%271%27 stop-color=%27%236d28d9%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%27512%27 height=%27512%27 rx=%27115%27 fill=%27url(%23g)%27/%3E%3Ccircle cx=%27100%27 cy=%27100%27 r=%27120%27 fill=%27white%27 opacity=%270.08%27/%3E%3Ccircle cx=%27440%27 cy=%27440%27 r=%27140%27 fill=%27white%27 opacity=%270.06%27/%3E%3Ctext x=%27256%27 y=%27340%27 font-size=%27260%27 text-anchor=%27middle%27%3E%F0%9F%93%96%3C/text%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}],"shortcuts":[{"name":"תורים היום","short_name":"תורים","url":".?tab=upcoming","icons":[{"src":"data:image/svg%2Bxml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%237c3aed%27/%3E%3Ctext x=%2750%27 y=%2772%27 font-size=%2760%27 text-anchor=%27middle%27%3E📅%3C/text%3E%3C/svg%3E","sizes":"96x96"}]},{"name":"יועץ AI","short_name":"AI","url":".?tab=advisor","icons":[{"src":"data:image/svg%2Bxml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%23f59e0b%27/%3E%3Ctext x=%2750%27 y=%2772%27 font-size=%2760%27 text-anchor=%27middle%27%3E🤖%3C/text%3E%3C/svg%3E","sizes":"96x96"}]}]}'>
@@ -2662,8 +2662,8 @@ textarea:focus-visible,
 // ── Firebase Auth — Email/Password + Login UI ─────────
 // כל משתמש (אוריאל/דניאל/הודיה) מתחבר עם email+סיסמה משלו.
 // רישום חדש חסום מאחורי קוד הזמנה. ה-token מתחדש אוטומטית.
-const FB='https://diary-hodaya-default-rtdb.firebaseio.com/therapy_hodaya';
-const FB_API_KEY='AIzaSyD33WEyVxguqiLSYDoZUffBPFtptycSC4M';
+const FB='https://diary-daniel-rinat-default-rtdb.firebaseio.com/therapy_hodaya';
+const FB_API_KEY='AIzaSyCsh6qM-WgbWn1LHx2FTVio35ZPvMQ0aG4';
 const INVITE_CODE='#Pinto13101ppz';
 
 // ── שכבה 8: הצפנת localStorage עם AES-GCM ──
@@ -2773,7 +2773,7 @@ const deviceFingerprint={
 };
 
 const rateLimit={
-  _key:'fb_ratelimit',
+  _key:'hodaya_fb_ratelimit',
   _load(){try{return JSON.parse(localStorage.getItem(this._key)||'{"fails":0,"blockedUntil":0}');}catch(e){return {fails:0,blockedUntil:0};}},
   _save(d){try{localStorage.setItem(this._key,JSON.stringify(d));}catch(e){}},
   check(){
@@ -3011,7 +3011,7 @@ const auth={
       body:JSON.stringify({
         requestType:'PASSWORD_RESET',
         email,
-        continueUrl:location.origin+location.pathname
+        continueUrl:'https://pinto1212121212-create.github.io/therapy-hodaya/'
       })
     });
     if(!r.ok){const err=await r.json();throw new Error(this._errMsg(err));}
@@ -3342,7 +3342,15 @@ function renderLogin(mode){
       <div class="login-sub">היומן של הודיה • הירשם כדי להתחיל</div>
       <div id="login-msg"></div>
       <div class="login-field"><label>שם מלא</label><input id="lg-name" type="text" data-rtl autocomplete="name"></div>
-      <div class="login-field"><label>Email</label><input id="lg-email" type="email" autocomplete="email"></div>
+      <div class="login-field">
+        <label>Email</label>
+        <input id="lg-email" type="email" autocomplete="email" oninput="checkEmailAlias()">
+        <div id="alias-hint" style="display:none;margin-top:8px;padding:10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.35);border-radius:10px;font-size:12px;color:#6ee7b7;line-height:1.5">
+          ✨ <b>הפרדה אוטומטית מופעלת</b><br>
+          <span id="alias-preview" style="font-family:monospace;background:rgba(16,185,129,0.15);padding:2px 6px;border-radius:4px;margin-top:4px;display:inline-block"></span><br>
+          <small style="opacity:0.8">המיילים יגיעו לאותה תיבה, אבל יהיה לך חשבון נפרד לגמרי.</small>
+        </div>
+      </div>
       <div class="login-field"><label>סיסמה (לפחות 8 תווים, אותיות ומספרים)</label><input id="lg-pass" type="password" autocomplete="new-password" oninput="updatePwStrength()"><div id="pw-strength" style="height:4px;border-radius:2px;background:rgba(255,255,255,0.1);margin-top:6px;overflow:hidden"><div id="pw-bar" style="height:100%;width:0;background:#ef4444;transition:width .3s,background .3s"></div></div><div id="pw-hint" style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px"></div></div>
       <div class="login-field"><label>🔒 אימות סיסמה</label><input id="lg-pass2" type="password" autocomplete="new-password" placeholder="הקלד את הסיסמה שוב"></div>
       <div class="login-field"><label>🎟️ קוד הזמנה</label><input id="lg-code" type="text" autocomplete="off"></div>
@@ -3357,6 +3365,9 @@ function renderLogin(mode){
       <div id="login-msg"></div>
       <div class="login-field"><label>Email</label><input id="lg-email" type="email" autocomplete="email"></div>
       <button class="login-btn" onclick="doReset()">📧 שלח קישור</button>
+      <div style="background:rgba(251,171,32,0.08);border:1px solid rgba(251,171,32,0.3);border-radius:10px;padding:10px;margin-top:14px;font-size:12px;color:#fcd34d;line-height:1.5">
+        💡 <b>חשוב:</b> פתח את הקישור ב-<b>Chrome/Safari</b>. אם Gmail פותח את הלינק בתוך האפליקציה שלו — זה לא יעבוד. לחץ על 3 הנקודות ליד הלינק ובחר "פתח בדפדפן".
+      </div>
       <div class="login-switch"><a onclick="switchLogin('signin')">← חזרה לכניסה</a></div>
     </div>`;
   }
@@ -3464,8 +3475,12 @@ async function initResetConfirm(oobCode){
   }catch(e){
     // ניקוי URL + הצגת הודעה ברורה
     window.history.replaceState({},'',location.pathname);
-    document.getElementById('reset-email').innerHTML='⚠️ קישור פג תוקף או כבר בשימוש';
-    _lgMsg('<b>הקישור הזה כבר לא תקף.</b><br><br>זה קורה אם:<br>• לחצת עליו כבר פעם אחת<br>• חלפה שעה מאז שהתקבל<br>• Gmail סרק אותו אוטומטית<br><br><b>פתרון:</b> לחץ "חזרה לכניסה" ובקש איפוס חדש. תפתח את המייל החדש תוך דקה.');
+    const errMsg=(e.message||'').toLowerCase();
+    document.getElementById('reset-email').innerHTML='⚠️ הקישור לא תקף';
+    let reason='<b>הקישור הזה כבר לא תקף.</b>';
+    if(errMsg.includes('expired'))reason='<b>הקישור פג תוקף (עובר שעה).</b>';
+    else if(errMsg.includes('invalid'))reason='<b>הקישור שבור או כבר נוצל.</b>';
+    _lgMsg(reason+'<br><br>זה קורה אם:<br>• לחצת עליו כבר פעם אחת<br>• חלפה שעה מאז שהתקבל<br>• Gmail סרק אותו אוטומטית<br>• פתחת בתוך אפליקציית Gmail במקום בדפדפן<br><br><b>פתרון:</b> לחץ "חזרה לכניסה" ובקש איפוס חדש. ברגע שתקבל מייל — פתח אותו בדפדפן Chrome/Safari <b>לא</b> בתוך אפליקציית Gmail.');
   }
 }
 
@@ -3493,16 +3508,36 @@ function _lgMsg(html,type){
 }
 
 async function doLogin(){
-  const email=document.getElementById('lg-email').value.trim();
+  const rawEmail=document.getElementById('lg-email').value.trim();
   const pass=document.getElementById('lg-pass').value;
-  if(!email||!pass){_lgMsg('מלא את כל השדות');return;}
+  if(!rawEmail||!pass){_lgMsg('מלא את כל השדות');return;}
   _lgMsg('⏳ מתחבר...','ok');
+  
+  // חכם: נסה קודם את ה-email כמו שהוכנס. אם נכשל בגלל "לא קיים" - נסה עם alias
+  let freshAuth=null;
+  let lastErr=null;
+  const emailsToTry=[rawEmail];
+  const aliased=applyAlias(rawEmail);
+  if(aliased!==rawEmail)emailsToTry.push(aliased);
+  
+  for(const em of emailsToTry){
+    try{
+      freshAuth=await auth.signIn(em,pass);
+      break;
+    }catch(e){
+      lastErr=e;
+      const msg=(e.message||'').toLowerCase();
+      // אם זה לא שגיאת "לא קיים" - תפסיק לנסות (בעיית סיסמה, רשת, וכו')
+      if(!msg.includes('לא נמצא')&&!msg.includes('נכונים')&&!msg.includes('not found')&&!msg.includes('invalid_login'))break;
+    }
+  }
+  
+  if(!freshAuth){
+    _lgMsg(lastErr?(lastErr.message||'שגיאה'):'שגיאה');
+    return;
+  }
+  
   try{
-    const freshAuth=await auth.signIn(email,pass);
-    // הצעת הפעלת טביעת אצבע רק אם:
-    // 1. המכשיר תומך
-    // 2. עדיין לא רשום
-    // 3. המשתמש לא דחה הצעה בעבר (או שעברו 30 יום מהדחיה האחרונה)
     const declinedAt=Number(localStorage.getItem('hodaya_bio_declined_at')||0);
     const THIRTY_DAYS=30*24*60*60*1000;
     const recentlyDeclined=declinedAt && (Date.now()-declinedAt < THIRTY_DAYS);
@@ -3621,15 +3656,50 @@ async function enableBiometric(){
   }catch(e){try{webToast('שגיאה: '+(e.message||'רישום נכשל'),true);}catch(_){}}
 }
 
+// ── Gmail Alias Auto-Separation ───────────────────────
+// הודיה משתמשת ב-Firebase המשותף עם רינת/דניאל. כדי שהחשבונות יהיו נפרדים באמת
+// (מיילים נפרדים, סיסמאות נפרדות), מוסיפים +hodaya ל-Gmail אוטומטית.
+// Gmail מתעלם מ-+xxx, אבל Firebase רואה שני users שונים לגמרי.
+const APP_ALIAS='hodaya';
+function applyAlias(email){
+  if(!email||!email.includes('@'))return email;
+  email=email.trim().toLowerCase();
+  // כבר יש alias - לא לגעת
+  if(email.includes('+'))return email;
+  // Gmail/Googlemail בלבד - שירותים אחרים לא תומכים ב-+aliases
+  const [local,domain]=email.split('@');
+  if(domain==='gmail.com'||domain==='googlemail.com'){
+    return local+'+'+APP_ALIAS+'@'+domain;
+  }
+  return email;
+}
+function checkEmailAlias(){
+  const inp=document.getElementById('lg-email');
+  const hint=document.getElementById('alias-hint');
+  const preview=document.getElementById('alias-preview');
+  if(!inp||!hint||!preview)return;
+  const raw=inp.value.trim().toLowerCase();
+  if(!raw||!raw.includes('@')){hint.style.display='none';return;}
+  const aliased=applyAlias(raw);
+  if(aliased!==raw){
+    preview.textContent=aliased;
+    hint.style.display='block';
+  }else{
+    hint.style.display='none';
+  }
+}
+
 async function doSignup(){
   const name=document.getElementById('lg-name').value.trim();
-  const email=document.getElementById('lg-email').value.trim();
+  const rawEmail=document.getElementById('lg-email').value.trim();
   const pass=document.getElementById('lg-pass').value;
   const pass2=document.getElementById('lg-pass2').value;
   const code=document.getElementById('lg-code').value.trim();
-  if(!name||!email||!pass||!pass2||!code){_lgMsg('מלא את כל השדות');return;}
+  if(!name||!rawEmail||!pass||!pass2||!code){_lgMsg('מלא את כל השדות');return;}
   if(pass.length<6){_lgMsg('הסיסמה חייבת להיות לפחות 6 תווים');return;}
   if(pass!==pass2){_lgMsg('הסיסמאות לא תואמות — בדוק שוב');return;}
+  // Auto alias: pinto@gmail.com → pinto+hodaya@gmail.com
+  const email=applyAlias(rawEmail);
   _lgMsg('⏳ רושם...','ok');
   try{
     await auth.signUp(email,pass,name,code);
@@ -3638,12 +3708,15 @@ async function doSignup(){
 }
 
 async function doReset(){
-  const email=document.getElementById('lg-email').value.trim();
-  if(!email){_lgMsg('הכנס אימייל');return;}
+  const rawEmail=document.getElementById('lg-email').value.trim();
+  if(!rawEmail){_lgMsg('הכנס אימייל');return;}
+  // אותה לוגיקה: אם זה Gmail, הוסף alias כדי שהאיפוס ילך ל-user הנכון
+  const email=applyAlias(rawEmail);
   _lgMsg('⏳ שולח...','ok');
   try{
     await auth.resetPassword(email);
-    _lgMsg('✅ נשלח! בדוק את האימייל שלך','ok');
+    const aliasNote=email!==rawEmail?'<br><small style="opacity:0.75">📮 נשלח ל-<b>'+email+'</b> (אותה תיבה שלך)</small>':'';
+    _lgMsg('✅ נשלח! בדוק את האימייל שלך.'+aliasNote+'<br><small style="opacity:0.7">פתח את הלינק ב-Chrome/Safari, לא באפליקציית Gmail</small>','ok');
   }catch(e){_lgMsg(e.message||'שגיאה');}
 }
 
