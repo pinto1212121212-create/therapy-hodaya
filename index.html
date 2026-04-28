@@ -510,7 +510,7 @@ button,input{font-family:inherit}
   .dc-cta{font-size:15px;padding:14px}
   /* Hist sheet - stay centered, not fullscreen */
   .hist-sheet{position:fixed;max-width:520px;width:100%;right:50%;transform:translateX(50%);height:calc(100vh - 48px);top:24px;bottom:24px;inset:auto;border-radius:28px;box-shadow:0 20px 60px rgba(76,29,149,.25);overflow:hidden}
-  /* Personal sheet (Daniel/Rinat) */
+  /* Personal sheet */
   .profile-sheet{max-width:520px;width:100%;right:50%;transform:translateX(50%);height:calc(100vh - 48px);top:24px;bottom:24px;inset:auto;border-radius:28px;box-shadow:0 20px 60px rgba(76,29,149,.25);overflow:hidden}
   /* Chart full screen adaptation */
   .chart-screen{max-width:520px;width:100%;right:50%;transform:translateX(50%);height:calc(100vh - 48px);top:24px;bottom:24px;inset:auto;border-radius:28px;box-shadow:0 20px 60px rgba(76,29,149,.25);overflow:hidden}
@@ -594,7 +594,7 @@ button,input{font-family:inherit}
 /* ── Person Cards Row ── */
 .cards-row{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:1fr;
   gap:var(--space-3)
 }
 
@@ -641,15 +641,10 @@ button,input{font-family:inherit}
   margin-top:2px
 }
 
-.card-daniel{
-  background:linear-gradient(135deg, #3b82f6, #1d4ed8);
-  box-shadow:0 4px 12px -2px rgba(59,130,246,0.3)
-}
 .card-rinat{
   background:linear-gradient(135deg, #ec4899, #be185d);
   box-shadow:0 4px 12px -2px rgba(236,72,153,0.3)
 }
-.card-daniel:hover{box-shadow:0 8px 20px -4px rgba(59,130,246,0.4)}
 .card-rinat:hover{box-shadow:0 8px 20px -4px rgba(236,72,153,0.4)}
 
 /* ── Main Diary Card — Hero (MINIMAL) ── */
@@ -2660,7 +2655,7 @@ textarea:focus-visible,
 <div id="app" role="main" aria-label="היומן של הודיה - אפליקציית ניהול קליניקה"><div class="loader" role="status" aria-live="polite"><div class="spinner" aria-hidden="true"></div><div style="color:#6d28d9;font-weight:bold;font-size:16px">טוען...</div></div></div>
 <script>
 // ── Firebase Auth — Email/Password + Login UI ─────────
-// כל משתמש (אוריאל/דניאל/הודיה) מתחבר עם email+סיסמה משלו.
+// כל משתמש (אוריאל/הודיה) מתחבר עם email+סיסמה משלו.
 // רישום חדש חסום מאחורי קוד הזמנה. ה-token מתחדש אוטומטית.
 const FB='https://therapy-hodaya-default-rtdb.europe-west1.firebasedatabase.app';
 const FB_API_KEY='AIzaSyAlVHMxGhVTkct4sTiOal9KuX9tXDJBlCQ';
@@ -3967,16 +3962,15 @@ const jsa=(s)=>String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(
 
 // ── State ─────────────────────────────────────────────
 const S={
-  screen:'home', _devTaps:0, // home | daniel | rinat | diary
+  screen:'home', _devTaps:0, // home | rinat | diary
   // personal tasks
-  dY:now.getFullYear(),dM:now.getMonth()+1,dSel:TD,
   rY:now.getFullYear(),rM:now.getMonth()+1,rSel:TD,
   // diary
   tab:1,lY:now.getFullYear(),lM:now.getMonth()+1,lSel:TD,lModal:null,lSlot:null,lF:{},
   tY:now.getFullYear(),tM:now.getMonth()+1,tSel:TD,
   gY:now.getFullYear(),gM:now.getMonth()+1,
   // data
-  DT:{},RT:{},A:{},T:{},G:{},BG:{},CL:{},CANC:{},PKGS:{},EXP:{},WEB:{},showHistory:false,histTab:"upcoming",payFilter:"all",expFilter:"all",expCat:"all",showAddGoal:false,newGoal:{title:"",target:"",period:"month",type:"revenue"},openClient:null,editClient:false,crmSearch:"",crmFilter:"all",showMonthPicker:false,showYearPicker:false,editPayKey:null,showAddPkg:false,editPkgKey:null,showAddExp:false,newExp:{amount:"",category:"supplies",description:"",vendor:"",date:"",recurring:false},editExpKey:null,editWeb:false,showAddPromoItem:false,newPromoItem:{title:"",desc:""},promoSubTab:"tasks",tasksRefreshing:false
+  RT:{},A:{},T:{},G:{},BG:{},CL:{},CANC:{},PKGS:{},EXP:{},WEB:{},showHistory:false,histTab:"upcoming",payFilter:"all",expFilter:"all",expCat:"all",showAddGoal:false,newGoal:{title:"",target:"",period:"month",type:"revenue"},openClient:null,editClient:false,crmSearch:"",crmFilter:"all",showMonthPicker:false,showYearPicker:false,editPayKey:null,showAddPkg:false,editPkgKey:null,showAddExp:false,newExp:{amount:"",category:"supplies",description:"",vendor:"",date:"",recurring:false},editExpKey:null,editWeb:false,showAddPromoItem:false,newPromoItem:{title:"",desc:""},promoSubTab:"tasks",tasksRefreshing:false
 };
 
 // ── Calendar HTML ─────────────────────────────────────
@@ -4009,58 +4003,6 @@ function calHTML(y,m,sel,dots,showH,color,redDots){
     h+=`</button>`;
   }
   return h+`</div></div></div></div>`;
-}
-
-// ── Personal Tasks Panel ──────────────────────────────
-function personalTasksPanel(who){
-  const isD=who==='daniel';
-  const color=isD?'#3b82f6':'#db2777';
-  const y=isD?S.dY:S.rY, m=isD?S.dM:S.rM, sel=isD?S.dSel:S.rSel;
-  const key=isD?'DT':'RT', data=S[key];
-  const dots=Object.keys(data).filter(k=>Array.isArray(data[k])&&data[k].some(t=>t));
-  const raw=data[sel]||[], rows=raw.length<10?[...raw,...Array(10-raw.length).fill('')]:[...raw];
-
-  // register day click handler dynamically
-  window['dc_'+color.replace('#','')]=k=>{if(isD)S.dSel=k;else S.rSel=k;const _p=document.querySelector('#personal-content');if(_p)_p.innerHTML=personalPanel(who);else render();};
-
-  let h=calHTML(y,m,sel,dots,true,color);
-  h+=`<div style="margin-top:16px">
-    <div style="display:flex;justify-content:space-between;margin-bottom:10px">
-      <span style="font-size:12px;color:#9ca3af">${rows.filter(r=>r).length}/${rows.length}</span>
-      <b style="color:#374151">${sel}</b>
-    </div>`;
-  rows.forEach((t,i)=>{h+=`<div class="task-row">
-    <button class="task-num" style="color:${color};background:${color}15;width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;font-size:13px;font-weight:bold;flex-shrink:0;display:flex;align-items:center;justify-content:center" onclick="openTaskModal('${who}','${sel}',${i})">${i+1}</button>
-    <input class="task-inp" style="border-color:${color}22" value="${x(t)}" placeholder="משימה ${i+1}..." oninput="upt_${who}(${i},this.value)">
-  </div>`;});
-  h+=`<button class="add-btn" style="border-color:${color};color:${color}" onclick="apt_${who}()">+ הוסף שורה</button></div>`;
-
-  // task modal
-  if(S.tModal&&S.tModal.who===who){
-    const mi=S.tModal.idx, mSel=S.tModal.sel;
-    const mKey=who==='daniel'?'DT':'RT';
-    const mRaw=S[mKey][mSel]||[], mRows=mRaw.length<10?[...mRaw,...Array(10-mRaw.length).fill('')]:[...mRaw];
-    const mColor=who==='daniel'?'#3b82f6':'#db2777';
-    const mVal=mRows[mi]||'';
-    h+=`<div class="task-modal-overlay" onclick="closeTaskModal()">
-      <div class="task-modal" onclick="event.stopPropagation()">
-        <div class="task-modal-header">
-          <b style="color:#374151;font-size:17px">משימה ${mi+1} — ${mSel}</b>
-          <button class="task-modal-close" onclick="closeTaskModal()">✕</button>
-        </div>
-        <textarea class="task-modal-area" style="border-color:${mColor}44;outline-color:${mColor}" placeholder="כתוב כאן את פרטי המשימה..." oninput="updateTaskModal('${who}','${mSel}',${mi},this.value)">${x(mVal)}</textarea>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
-          <span style="font-size:12px;color:#9ca3af">${mVal.length} תווים</span>
-          <button onclick="closeTaskModal()" style="background:${mColor};color:white;border:none;border-radius:12px;padding:10px 24px;font-weight:bold;font-size:14px;cursor:pointer;font-family:inherit">✓ סגור</button>
-        </div>
-      </div>
-    </div>`;
-  }
-
-  // register update handlers
-  window['upt_'+who]=(i,v)=>{const r=S[key][sel]||[];const rows2=r.length<10?[...r,...Array(10-r.length).fill('')]:[...r];rows2[i]=v;S[key][sel]=rows2;localStore.set(key.toLowerCase(),S[key]);};
-  window['apt_'+who]=()=>{const r=S[key][sel]||[];const rows2=r.length<10?[...r,...Array(10-r.length).fill('')]:[...r];rows2.push('');S[key][sel]=rows2;localStore.set(key.toLowerCase(),S[key]);const _p=document.querySelector('#personal-content');if(_p)_p.innerHTML=personalPanel(who);else render();};
-  return h;
 }
 
 // ── Diary Panels ──────────────────────────────────────
@@ -4321,17 +4263,11 @@ function render(){
       ${S._devTaps>=5?`<div style="position:fixed;top:12px;left:12px;z-index:999;display:flex;gap:8px"><button id="deploy-btn" onclick="deployToGitHub()" aria-label="פרסם גרסה חדשה ל-GitHub" style="background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.3);border-radius:50%;width:32px;height:32px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">🚀</button><button id="backup-btn" onclick="backupAllData()" aria-label="הורד גיבוי מלא של כל הנתונים" title="גיבוי מלא" style="background:rgba(251,171,32,0.15);color:#fbab20;border:1px solid rgba(251,171,32,0.35);border-radius:50%;width:32px;height:32px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">💾</button></div>`:''}<button onclick="openMyAccount()" aria-label="החשבון שלי" title="${auth.user?auth.user.name:''}" style="position:fixed;top:12px;right:12px;z-index:999;background:rgba(251,171,32,0.12);color:#fbab20;border:1px solid rgba(251,171,32,0.3);border-radius:50%;width:36px;height:36px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit">👤</button><button id="pwa-install-btn" class="pwa-btn" onclick="installPWA()" aria-label="התקן את האפליקציה במסך הבית">📲 הוסף למסך הבית</button>
       <header class="home-title" role="banner">
         <h1 onclick="S._devTaps=(S._devTaps||0)+1;if(S._devTaps>=5)render()"><span>היומן של הודיה</span><span class="book-ico" aria-hidden="true">📖</span></h1>
-        <p>דניאל <span class="heart" aria-hidden="true">♡</span> הודיה</p>
       </header>
       <nav class="cards-row" aria-label="ניווט ראשי - בחירת משתמש">
         <button class="card card-rinat" onclick="S.screen='rinat';render()" aria-label="המשימות של הודיה">
           <div class="card-emoji" aria-hidden="true">🦄</div>
           <div class="card-name">הודיה</div>
-          <div class="card-sub">משימות יומיות</div>
-        </button>
-        <button class="card card-daniel" onclick="S.screen='daniel';render()" aria-label="המשימות של דניאל">
-          <div class="card-emoji" aria-hidden="true">👦</div>
-          <div class="card-name">דניאל</div>
           <div class="card-sub">משימות יומיות</div>
         </button>
       </nav>
@@ -4371,12 +4307,11 @@ function render(){
       </button>
       <div class="home-ftr">פרטי <span class="divider">·</span> מאובטח <span class="divider">·</span> מסונכרן</div>
     </div>`;
-  } else if(S.screen==='daniel'||S.screen==='rinat'){
-    const isD=S.screen==='daniel';
-    const color=isD?'#3b82f6':'#db2777';
-    const bg=isD?'linear-gradient(135deg,#3b82f6,#1d4ed8)':'linear-gradient(135deg,#f472b6,#db2777)';
-    const name=isD?'דניאל':'הודיה';
-    const emoji=isD?'👨':'🦄';
+  } else if(S.screen==='rinat'){
+    const color='#db2777';
+    const bg='linear-gradient(135deg,#f472b6,#db2777)';
+    const name='הודיה';
+    const emoji='🦄';
     h=`<div style="background:${bg};flex-shrink:0">
       <div class="hdr">
         <button class="hdr-back" onclick="S.screen='home';render()">←</button>
@@ -4425,12 +4360,12 @@ function modalRender(){
   dm.innerHTML=S.lModal?laserModal():'';
 }
 function personalPanel(who){
-  const isD=who==='daniel',color=isD?'#3b82f6':'#db2777',key=isD?'DT':'RT';
-  const y=isD?S.dY:S.rY,m=isD?S.dM:S.rM,sel=isD?S.dSel:S.rSel;
+  const color='#db2777',key='RT';
+  const y=S.rY,m=S.rM,sel=S.rSel;
   const data=S[key],dots=Object.keys(data).filter(k=>Array.isArray(data[k])&&data[k].some(t=>t));
   const raw=data[sel]||[],rows=raw.length<10?[...raw,...Array(10-raw.length).fill('')]:[...raw];
   window['dc_'+color.replace('#','')]=k=>{
-    if(isD)S.dSel=k;else S.rSel=k;
+    S.rSel=k;
     const _p=document.querySelector('#personal-content');
     if(_p)_p.innerHTML=personalPanel(who);else render();
   };
@@ -4458,8 +4393,7 @@ function personalPanel(who){
 // ── Nav helpers ───────────────────────────────────────
 function nc(color,d,y,m){
   const nm=m+d;
-  if(color==='#3b82f6'){if(nm>12){S.dM=1;S.dY=y+1;}else if(nm<1){S.dM=12;S.dY=y-1;}else S.dM=nm;}
-  else if(color==='#db2777'){if(nm>12){S.rM=1;S.rY=y+1;}else if(nm<1){S.rM=12;S.rY=y-1;}else S.rM=nm;}
+  if(color==='#db2777'){if(nm>12){S.rM=1;S.rY=y+1;}else if(nm<1){S.rM=12;S.rY=y-1;}else S.rM=nm;}
   else if(color==='#7c3aed'){
     if(S.tab===1){if(nm>12){S.lM=1;S.lY=y+1;}else if(nm<1){S.lM=12;S.lY=y-1;}else S.lM=nm;}
     else{if(nm>12){S.tM=1;S.tY=y+1;}else if(nm<1){S.tM=12;S.tY=y-1;}else S.tM=nm;}
@@ -5962,7 +5896,7 @@ function getLaserAnim(){
 function openTaskModal(who,sel,idx){S.tModal={who,sel,idx};const _c=document.querySelector('#diary-content');if(_c&&S.screen==='diary')_c.innerHTML=pTasks();else render();}
 function closeTaskModal(){S.tModal=null;const _c=document.querySelector('#diary-content');if(_c&&S.screen==='diary')_c.innerHTML=pTasks();else render();}
 function updateTaskModal(who,sel,idx,val){
-  const key=who==='daniel'?'DT':'RT';
+  const key='RT';
   const r=S[key][sel]||[];
   const rows=r.length<10?[...r,...Array(10-r.length).fill('')]:[...r];
   rows[idx]=val; S[key][sel]=rows;
@@ -6950,13 +6884,12 @@ function openYearPicker(color,y,m){
 }
 function ncPick(color,y,m){
   if(color==="#7c3aed"){S.lY=y;S.lM=m;S.lSel=TD;}
-  else if(color==="#3b82f6"){S.dY=y;S.dM=m;}
   else if(color==="#db2777"){S.rY=y;S.rM=m;}
   else if(color==="#0891b2"){S.moveY=y;S.moveM=m;}
   else{S.tY=y;S.tM=m;}
   const dc=document.querySelector('#diary-content');
   if(dc&&S.screen==='diary'){diaryRender();}
-  else if(S.screen==='daniel'||S.screen==='rinat'){const p=document.querySelector('#personal-content');if(p)p.innerHTML=personalPanel(S.screen);}
+  else if(S.screen==='rinat'){const p=document.querySelector('#personal-content');if(p)p.innerHTML=personalPanel(S.screen);}
   else render();
 }
 
@@ -15693,7 +15626,7 @@ if(typeof window !== 'undefined'){
   session.start();
   // טוען את היומן כרגיל
   const [a,t,g,bg,cl,canc,pkgs,exp,web]=await Promise.all([store.get('appts'),store.get('tasks'),store.get('goals'),store.get('bgoals'),store.get('clients'),store.get('cancellations'),store.get('packages'),store.get('expenses'),store.get('website')]);
-  const dt=localStore.get('dt'),rt=localStore.get('rt');
+  const rt=localStore.get('rt');
   if(a&&typeof a==='object')S.A=a;
   if(t&&typeof t==='object')S.T=t;
   if(g&&typeof g==='object')S.G=g;
@@ -15703,7 +15636,6 @@ if(typeof window !== 'undefined'){
   if(pkgs&&typeof pkgs==='object')S.PKGS=pkgs;
   if(exp&&typeof exp==='object')S.EXP=exp;
   if(web&&typeof web==='object')S.WEB=web;
-  if(dt&&typeof dt==='object')S.DT=dt;
   if(rt&&typeof rt==='object')S.RT=rt;
   render();
 })();
