@@ -3011,7 +3011,8 @@ const auth={
       body:JSON.stringify({
         requestType:'PASSWORD_RESET',
         email,
-        continueUrl:'https://pinto1212121212-create.github.io/therapy-hodaya/'
+        continueUrl:'https://pinto1212121212-create.github.io/therapy-hodaya/',
+        canHandleCodeInApp:true
       })
     });
     if(!r.ok){const err=await r.json();throw new Error(this._errMsg(err));}
