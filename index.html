@@ -3715,22 +3715,12 @@ async function enableBiometric(){
   }catch(e){try{webToast('שגיאה: '+(e.message||'רישום נכשל'),true);}catch(_){}}
 }
 
-// ── Gmail Alias Auto-Separation ───────────────────────
-// הודיה משתמשת ב-Firebase המשותף עם רינת/דניאל. כדי שהחשבונות יהיו נפרדים באמת
-// (מיילים נפרדים, סיסמאות נפרדות), מוסיפים +hodaya ל-Gmail אוטומטית.
-// Gmail מתעלם מ-+xxx, אבל Firebase רואה שני users שונים לגמרי.
-const APP_ALIAS='hodaya';
+// ── Email normalization ───────────────────────────────
+// הפרויקט ב-Firebase של therapy-hodaya עצמאי, אז כבר אין צורך ב-+hodaya alias.
+// נשארה פונקציה זהה בחתימה כדי לא לשבור קוד קיים — רק מנרמלת trim/lowercase.
 function applyAlias(email){
   if(!email||!email.includes('@'))return email;
-  email=email.trim().toLowerCase();
-  // כבר יש alias - לא לגעת
-  if(email.includes('+'))return email;
-  // Gmail/Googlemail בלבד - שירותים אחרים לא תומכים ב-+aliases
-  const [local,domain]=email.split('@');
-  if(domain==='gmail.com'||domain==='googlemail.com'){
-    return local+'+'+APP_ALIAS+'@'+domain;
-  }
-  return email;
+  return email.trim().toLowerCase();
 }
 function checkEmailAlias(){
   const inp=document.getElementById('lg-email');
