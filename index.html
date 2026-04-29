@@ -546,7 +546,7 @@ button,input{font-family:inherit}
 
   /* ── Final desktop polish — make the app feel like a real website ── */
   /* PWA install affordance is mobile-only; desktop browsers don't have a home screen */
-  .install-pill{display:none}
+  .install-pill{display:none!important}
   /* Account button: dock to the app card corner instead of the viewport corner.
      The buttons use inline styles so we override with !important. */
   body > button[onclick^="openMyAccount"]{
@@ -559,18 +559,46 @@ button,input{font-family:inherit}
     top:36px!important;
     left:max(20px,calc((100vw - var(--app-w))/2 + 20px))!important;
   }
-  /* Bigger touch targets and reading sizes inside screens */
+
+  /* ── Home screen: stop the diary hero from stretching to fill empty
+     vertical space. On a tall desktop viewport the flex:1 + min-height
+     combo created a huge empty purple void. Pin to natural size. ── */
+  .home{justify-content:flex-start;gap:18px;padding:24px 24px 28px}
+  .card-diary{flex:0 1 auto;min-height:auto;padding:28px}
+  .card{min-height:150px}
+  .card .card-emoji{font-size:48px}
+
+  /* ── Calendar ── */
   .cal-day{min-height:52px;font-size:14px;border-radius:12px}
   .cal-day-heb{font-size:10px}
   .cal-day-hol{font-size:8px}
-  .card{min-height:160px}
-  .card-diary{min-height:420px;padding:32px}
-  .card .card-emoji{font-size:48px}
+
+  /* ── Screen header (back arrow + title) ── */
   .hdr{padding:18px 22px 14px}
   .hdr-title2{font-size:18px}
   .hdr-sub{font-size:13px}
-  /* Smoother screen entry on desktop */
-  .home,.hdr,.tabs+.content{animation-duration:.5s}
+
+  /* ── Inner-screen content: roomier padding for desktop reading ── */
+  .content,.hist-content{padding:18px 20px}
+
+  /* ── Form inputs: bigger and more comfortable for mouse + keyboard ── */
+  .inp,.task-inp,.exp-inp,.add-inp,.token-inp,.pay-inp-sm,
+  input[type="text"]:not([data-rtl]):not(.login-field input),
+  input[type="email"]:not(.login-field input),
+  input[type="tel"]:not(.login-field input),
+  input[type="number"]:not(.login-field input),
+  textarea:not(.task-modal-area):not(.login-field textarea){
+    font-size:15px;
+    padding:12px 14px
+  }
+  textarea.task-modal-area{font-size:16px;min-height:200px}
+
+  /* ── Buttons: comfortable hit-areas, gentle hover scaling ── */
+  .btn{padding:14px 18px;font-size:15px;transition:transform .15s ease,box-shadow .15s ease}
+  .btn:hover:not(:disabled){transform:translateY(-1px)}
+
+  /* ── Smooth animations on desktop ── */
+  .home,.hdr,.tabs+.content{animation-duration:.45s}
 }
 
 /* ── Large Desktop (1200px+) - decorative emoji push outward ── */
