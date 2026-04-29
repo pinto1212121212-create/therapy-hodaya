@@ -490,11 +490,20 @@ button,input{font-family:inherit}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 #app{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:#f3f0ff}
 
-/* ── Desktop & Tablet (768px+) ── */
+/* ── Desktop adaptation ───────────────────────────────────────────
+   Single source of truth for the centred app width. Internal layout
+   was designed for a phone column, so we widen modestly — never
+   beyond what keeps cards/buttons looking intentional. ────────── */
+:root{--app-w:430px}
+@media(min-width:768px){:root{--app-w:600px}}
+@media(min-width:1200px){:root{--app-w:720px}}
+
 @media(min-width:768px){
   body{background:linear-gradient(135deg,#ede9fe 0%,#e0e7ff 50%,#fae8ff 100%);display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;min-height:100vh}
-  #app{max-width:520px;border-radius:28px;box-shadow:0 20px 60px rgba(76,29,149,.18);min-height:calc(100vh - 48px);max-height:calc(100vh - 48px);overflow:hidden;position:sticky;top:24px;background:white}
+  #app{max-width:var(--app-w);border-radius:28px;box-shadow:0 24px 72px -12px rgba(76,29,149,.22),0 8px 24px -6px rgba(76,29,149,.12);min-height:calc(100vh - 48px);max-height:calc(100vh - 48px);overflow:hidden;position:sticky;top:24px;background:white}
   .content{overflow-y:auto;max-height:calc(100vh - 200px)}
+  /* Inner content widens with the frame */
+  .home{max-width:var(--app-w)}
   /* Bigger home title */
   .home-title h1{font-size:36px}
   .home-title p{font-size:15px}
@@ -508,30 +517,31 @@ button,input{font-family:inherit}
   .dc-feat-lbl{font-size:11px}
   .dc-ico{font-size:58px}
   .dc-cta{font-size:15px;padding:14px}
-  /* Hist sheet - stay centered, not fullscreen */
-  .hist-sheet{position:fixed;max-width:520px;width:100%;right:50%;transform:translateX(50%);height:calc(100vh - 48px);top:24px;bottom:24px;inset:auto;border-radius:28px;box-shadow:0 20px 60px rgba(76,29,149,.25);overflow:hidden}
-  /* Personal sheet */
-  .profile-sheet{max-width:520px;width:100%;right:50%;transform:translateX(50%);height:calc(100vh - 48px);top:24px;bottom:24px;inset:auto;border-radius:28px;box-shadow:0 20px 60px rgba(76,29,149,.25);overflow:hidden}
-  /* Chart full screen adaptation */
-  .chart-screen{max-width:520px;width:100%;right:50%;transform:translateX(50%);height:calc(100vh - 48px);top:24px;bottom:24px;inset:auto;border-radius:28px;box-shadow:0 20px 60px rgba(76,29,149,.25);overflow:hidden}
-  /* Laser beam overlay should cover the app only */
-  .laser-beam-overlay{max-width:520px;right:50%;transform:translateX(50%);inset:auto}
+  /* All full-screen sheets/overlays track the app frame */
+  .hist-sheet,.profile-sheet,.chart-screen{position:fixed;max-width:var(--app-w);width:100%;right:50%;transform:translateX(50%);height:calc(100vh - 48px);top:24px;bottom:24px;inset:auto;border-radius:28px;box-shadow:0 24px 72px -12px rgba(76,29,149,.25);overflow:hidden}
+  .laser-beam-overlay{max-width:var(--app-w);right:50%;transform:translateX(50%);inset:auto}
   /* Tap targets a bit bigger */
   .tab{padding:14px 0;font-size:14px}
   .hist-tab{padding:12px 16px;font-size:12px}
   /* PWA button hidden on desktop */
   .pwa-btn{display:none!important}
-  /* Scrollbar styling for desktop */
-  .content::-webkit-scrollbar,.hist-content::-webkit-scrollbar{display:block!important;width:8px}
-  .content::-webkit-scrollbar-thumb,.hist-content::-webkit-scrollbar-thumb{background:#c4b5fd;border-radius:4px}
+  /* Polished scrollbar */
+  .content::-webkit-scrollbar,.hist-content::-webkit-scrollbar{display:block!important;width:10px}
+  .content::-webkit-scrollbar-thumb,.hist-content::-webkit-scrollbar-thumb{background:#c4b5fd;border-radius:5px;border:2px solid #f3f0ff}
+  .content::-webkit-scrollbar-thumb:hover,.hist-content::-webkit-scrollbar-thumb:hover{background:#a78bfa}
   .content::-webkit-scrollbar-track,.hist-content::-webkit-scrollbar-track{background:#f3f0ff}
+  /* Desktop affordances: pointer cursor + subtle hover lift on tappable cards */
+  .card,.dc-cta,.btn,.tab{cursor:pointer}
+  .card:hover{transform:translateY(-2px);transition:transform .18s var(--ease-out,ease-out)}
+  /* Crisp keyboard focus rings */
+  button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid #7c3aed;outline-offset:2px;border-radius:8px}
 }
 
-/* ── Large Desktop (1200px+) - add side decorations ── */
+/* ── Large Desktop (1200px+) - decorative emoji push outward ── */
 @media(min-width:1200px){
   body{position:relative}
-  body::before{content:'📖';position:fixed;top:50%;right:calc(50% + 340px);transform:translateY(-50%);font-size:120px;opacity:.04;pointer-events:none;animation:float 5s ease-in-out infinite}
-  body::after{content:'💆‍♀️';position:fixed;top:50%;left:calc(50% + 340px);transform:translateY(-50%);font-size:120px;opacity:.04;pointer-events:none;animation:float 5s ease-in-out infinite;animation-delay:-2.5s}
+  body::before{content:'📖';position:fixed;top:50%;right:calc(50% + 440px);transform:translateY(-50%);font-size:140px;opacity:.05;pointer-events:none;animation:float 5s ease-in-out infinite}
+  body::after{content:'💆‍♀️';position:fixed;top:50%;left:calc(50% + 440px);transform:translateY(-50%);font-size:140px;opacity:.05;pointer-events:none;animation:float 5s ease-in-out infinite;animation-delay:-2.5s}
 }
 
 
@@ -2018,7 +2028,7 @@ textarea.task-modal-area{width:100%;border:1.5px solid #e5e7eb;border-radius:12p
 .wt-cursor-reminder-ico{font-size:20px;flex-shrink:0}
 
 @media(min-width:768px){
-  .web-edit-screen{max-width:520px;width:100%;right:50%;transform:translateX(50%);height:calc(100vh - 48px);top:24px;bottom:24px;inset:auto;border-radius:28px;box-shadow:0 20px 60px rgba(76,29,149,.25);overflow:hidden}
+  .web-edit-screen{max-width:var(--app-w);width:100%;right:50%;transform:translateX(50%);height:calc(100vh - 48px);top:24px;bottom:24px;inset:auto;border-radius:28px;box-shadow:0 24px 72px -12px rgba(76,29,149,.25);overflow:hidden}
 }
 
 
