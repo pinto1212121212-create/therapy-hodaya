@@ -7662,7 +7662,7 @@ async function enableBrowserReminder(apptId,encodedAppt,minutesBefore){
     delete window._apptReminderTimeouts[apptId];
   },delay);
   
-  setReminder(apptId,{minutes:minutesBefore,method:'browser',scheduledFor:triggerAt,createdAt:Date.now()});
+  setReminder(apptId,{minutes:minutesBefore,method:'browser',scheduledFor:triggerAt,createdAt:Date.now(),appt:{name:appt.name,time:appt.time,type:appt.type||''}});
   closeReminderSheet();
   toast('🔔 התראת דפדפן תופעל בזמן');
   if(typeof hRender==='function')hRender();
@@ -7682,13 +7682,17 @@ function restoreReminders(){
       return;
     }
     if(delay>2147483647)return;
-    // Need to parse apptId back into basic info
-    const parts=apptId.split('_');
-    const date=parts[0],time=parts[1],name=parts.slice(2).join(' ');
+    let name,time,type='';
+    if(rem.appt&&rem.appt.name){
+      name=rem.appt.name;time=rem.appt.time;type=rem.appt.type||'';
+    }else{
+      const parts=apptId.split('_');
+      time=parts[1];name=parts.slice(2).join(' ');
+    }
     window._apptReminderTimeouts[apptId]=setTimeout(()=>{
       try{
         new Notification(`🔔 תור בעוד ${rem.minutes>=1440?(rem.minutes/1440)+' יום':rem.minutes>=60?(rem.minutes/60)+' שעות':rem.minutes+' דקות'}`,{
-          body:`${name} · ${time}`,
+          body:`${name} · ${time}${type?' · '+type:''}`,
           tag:apptId,
           requireInteraction:true
         });
