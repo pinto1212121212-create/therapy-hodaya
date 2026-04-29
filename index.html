@@ -12842,9 +12842,13 @@ function webInjectEditor(html){
 @media(min-width:1600px){:root{--app-w:940px}}
 
 @media(min-width:768px){
+  /* מבטיח ש-#app הוא ה-containing block לילדים אבסולוטיים גם אם
+     sticky נכשל ביצירת containing block בדפדפן מסוים */
+  #app{position:relative!important;top:auto!important}
+  #hist-panel-wrap{position:absolute!important;inset:0!important;z-index:300}
   /* פנלים שמוזרקים בתוך #app (תורים + פרופיל מטופלת) — שיממלאו
      את מסגרת האפליקציה במקום להישבר ולהופיע בצד. position:absolute
-     ביחס ל-#app שכבר position:sticky על מסך רחב.
+     ביחס ל-#app.
      הערה: transform ללא !important — כדי שאנימציית slideUp תוכל
      לפעול בזמן הפתיחה, ובסיום תחזור ל-none. */
   .hist-sheet,
@@ -15892,46 +15896,30 @@ async function quickDeploy(){
 }
 </script>
 
-<!-- ── Service Worker registration + auto-update banner ── -->
+<!-- ── Service Worker cleanup + cache busting ─────────────────────
+     הקובץ service-worker.js לא קיים בריפו, אבל אם בעבר היה רשום
+     SW אצל המשתמש — הוא עדיין יכול לשרת תוכן ישן מהמטמון.
+     הקוד הבא מבטל רישום של כל SW קיים ומנקה את כל ה-Caches API,
+     כדי לוודא שעדכוני קוד תמיד נראים מיד אחרי deploy.            */
 <script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./service-worker.js').then(reg=>{
-      // האזנה לעדכונים
-      reg.addEventListener('updatefound',()=>{
-        const newSW=reg.installing;
-        if(!newSW)return;
-        newSW.addEventListener('statechange',()=>{
-          if(newSW.state==='installed' && navigator.serviceWorker.controller){
-            // יש גרסה חדשה זמינה
-            _showUpdateBanner(newSW);
-          }
-        });
+(function(){
+  if(!('serviceWorker' in navigator))return;
+  navigator.serviceWorker.getRegistrations().then(regs=>{
+    if(!regs||!regs.length)return;
+    let didUnreg=false;
+    regs.forEach(r=>{r.unregister();didUnreg=true;});
+    if('caches' in window){
+      caches.keys().then(keys=>{
+        keys.forEach(k=>caches.delete(k));
+        if(didUnreg && !sessionStorage.getItem('sw-cleared')){
+          sessionStorage.setItem('sw-cleared','1');
+          // טעינה מחדש פעם אחת אחרי ניקוי SW ישן — כדי שייטען המקור הטרי
+          location.reload();
+        }
       });
-    }).catch(e=>{/* SW רישום נכשל — לא נורא, האתר עובד בלעדיו */});
-    
-    // reload אוטומטי כשה-SW החדש תופס שליטה
-    let _reloaded=false;
-    navigator.serviceWorker.addEventListener('controllerchange',()=>{
-      if(_reloaded)return;
-      _reloaded=true;
-      location.reload();
-    });
-  });
-}
-
-function _showUpdateBanner(newSW){
-  if(document.getElementById('sw-update-banner'))return;
-  const b=document.createElement('div');
-  b.id='sw-update-banner';
-  b.style.cssText='position:fixed;top:12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;box-shadow:0 8px 24px rgba(124,58,237,0.5);z-index:99998;cursor:pointer;font-family:inherit;direction:rtl;display:flex;align-items:center;gap:10px';
-  b.innerHTML='✨ גרסה חדשה זמינה — לחץ לרענון';
-  b.onclick=()=>{
-    newSW.postMessage({type:'SKIP_WAITING'});
-    // ה-controllerchange יגרום ל-reload
-  };
-  document.body.appendChild(b);
-}
+    }
+  }).catch(()=>{});
+})();
 </script>
 
 </body>
