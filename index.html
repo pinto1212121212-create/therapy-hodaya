@@ -12831,6 +12831,71 @@ function webInjectEditor(html){
 .promo-subnav-btn.on .promo-subnav-badge{background:rgba(212,165,116,0.25);color:#d4a574;border-color:rgba(212,165,116,0.4)}
 .promo-subnav-badge.done{background:#10b981;color:white;border-color:#10b981}
 
+/* ═══════════════════════════════════════════════════════════════════
+   תיקוני שולחן עבודה — מסך מלא לפנלים, גודל אפליקציה רחב יותר
+   ═══════════════════════════════════════════════════════════════════
+   חוקים אלו מופיעים בסוף הקובץ כדי לנצח על כפילויות מוקדמות יותר
+   של .hist-sheet / .profile-sheet / .chart-screen שהתנגשו עם פריסת
+   הדסקטופ ויצרו פאנל-צד מנותק במקום מסך מלא בתוך מסגרת האפליקציה. */
+@media(min-width:768px){:root{--app-w:680px}}
+@media(min-width:1200px){:root{--app-w:820px}}
+@media(min-width:1600px){:root{--app-w:940px}}
+
+@media(min-width:768px){
+  /* פנלים שמוזרקים בתוך #app (תורים + פרופיל מטופלת) — שיממלאו
+     את מסגרת האפליקציה במקום להישבר ולהופיע בצד. position:absolute
+     ביחס ל-#app שכבר position:sticky על מסך רחב.
+     הערה: transform ללא !important — כדי שאנימציית slideUp תוכל
+     לפעול בזמן הפתיחה, ובסיום תחזור ל-none. */
+  .hist-sheet,
+  .profile-sheet{
+    position:absolute!important;
+    top:0!important;right:0!important;bottom:0!important;left:0!important;
+    inset:0!important;
+    width:auto!important;
+    height:auto!important;
+    max-width:none!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    transform:none;
+  }
+  /* מסך גרף חודשי — מוזרק ל-body, אז נשאר fixed וממוקם
+     מרכזית מעל מסגרת האפליקציה. ביטלתי את אנימציית slideUp
+     כדי למנוע "קפיצה" של ציר X בסיום (translateX מתאפס) */
+  .chart-screen{
+    position:fixed!important;
+    top:24px!important;
+    bottom:24px!important;
+    left:50%!important;
+    right:auto!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:var(--app-w)!important;
+    height:calc(100vh - 48px)!important;
+    border-radius:28px!important;
+    box-shadow:0 24px 72px -12px rgba(76,29,149,.25)!important;
+    overflow:hidden!important;
+    animation:deskFadeIn .25s ease!important;
+  }
+  /* שכבת קרני לייזר — עוקבת אחרי מסגרת האפליקציה */
+  .laser-beam-overlay{
+    position:fixed!important;
+    top:0!important;bottom:0!important;
+    left:50%!important;right:auto!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:var(--app-w)!important;
+  }
+}
+@keyframes deskFadeIn{from{opacity:0}to{opacity:1}}
+
+/* התאמת מיקום אייקוני העיטור הצפים כך שלא יחפפו את המסגרת
+   הרחבה יותר של האפליקציה */
+@media(min-width:1200px){
+  body::before{right:calc(50% + var(--app-w)/2 + 60px)!important}
+  body::after{left:calc(50% + var(--app-w)/2 + 60px)!important}
+}
+
 </style>
 <scr`+`ipt data-webedit-tag="1">
 (function(){
