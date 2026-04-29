@@ -561,10 +561,12 @@ button,input{font-family:inherit}
   }
 
   /* ── Home screen: stop the diary hero from stretching to fill empty
-     vertical space. On a tall desktop viewport the flex:1 + min-height
-     combo created a huge empty purple void. Pin to natural size. ── */
-  .home{justify-content:flex-start;gap:18px;padding:24px 24px 28px}
-  .card-diary{flex:0 1 auto;min-height:auto;padding:28px}
+     vertical space. The base .card-diary rule (later in source) sets
+     flex:1 and min-height:360px without !important — but appears AFTER
+     this @media block in source, so we must use !important to win the
+     cascade and prevent the giant empty purple void. ── */
+  .home{justify-content:flex-start!important;gap:18px!important;padding:24px 24px 28px!important}
+  .card-diary{flex:0 1 auto!important;min-height:auto!important;padding:28px!important;justify-content:flex-start!important;gap:20px!important}
   .card{min-height:150px}
   .card .card-emoji{font-size:48px}
 
@@ -599,6 +601,32 @@ button,input{font-family:inherit}
 
   /* ── Smooth animations on desktop ── */
   .home,.hdr,.tabs+.content{animation-duration:.45s}
+
+  /* ── Diary screen interior — tabs, panels, calendar controls ── */
+  .tab{padding:16px 0;font-size:14px;letter-spacing:.02em;border-bottom-width:3px}
+  .tab.on{font-size:14px}
+  .tab:hover:not(.on){color:#6b7280;background:rgba(124,58,237,0.03)}
+
+  /* Calendar view toggle (חודשי / שבועי) */
+  .cal-vbtn{padding:9px 22px;font-size:13px;border-radius:20px}
+
+  /* Month grid in goals */
+  .months-grid{gap:12px;margin-bottom:24px}
+  .mo-btn{padding:14px 0;font-size:14px;border-radius:16px;transition:transform .15s ease,background .15s ease}
+  .mo-btn:hover{transform:translateY(-1px)}
+
+  /* Task rows: comfortable entry on desktop */
+  .task-row{gap:10px;margin-bottom:8px}
+  .task-num{font-size:13px;width:22px}
+  .task-inp{padding:12px 14px;font-size:14px;border-radius:12px}
+  .task-inp:focus-visible{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,0.15)}
+
+  /* Round nav buttons (‹ ›) */
+  .cnb{width:40px;height:40px;font-size:24px;transition:background .15s ease}
+  .cnb:hover{background:rgba(124,58,237,0.08)}
+
+  /* Tab content max-width — track the app width on desktop */
+  .tab-content{max-width:none;padding:20px 24px}
 }
 
 /* ── Large Desktop (1200px+) - decorative emoji push outward ── */
