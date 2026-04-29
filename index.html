@@ -2747,6 +2747,71 @@ textarea:focus-visible,
 .hist-tab-badge.green{background:var(--success-100);color:var(--success-700)}
 .hist-tab.active .hist-tab-badge.green{background:var(--success-600);color:white}
 
+/* ═══════════════════════════════════════════════════════════════════
+   תיקוני שולחן עבודה — מסך מלא לפנלים, גודל אפליקציה רחב יותר
+   ═══════════════════════════════════════════════════════════════════
+   חוקים אלו ממוקמים כאן (בסוף ה-<style> הראשון בראש הקובץ) כדי
+   לנצח על כפילויות מוקדמות יותר של .hist-sheet / .profile-sheet /
+   .chart-screen שהתנגשו עם פריסת הדסקטופ ויצרו פאנל-צד מנותק
+   במקום מסך מלא בתוך מסגרת האפליקציה. */
+@media(min-width:768px){:root{--app-w:680px}}
+@media(min-width:1200px){:root{--app-w:820px}}
+@media(min-width:1600px){:root{--app-w:940px}}
+
+@media(min-width:768px){
+  /* מבטיח ש-#app הוא ה-containing block לילדים אבסולוטיים גם אם
+     sticky נכשל ביצירת containing block בדפדפן מסוים */
+  #app{position:relative!important;top:auto!important}
+  #hist-panel-wrap{position:absolute!important;inset:0!important;z-index:300}
+  /* פנלים שמוזרקים בתוך #app (תורים + פרופיל מטופלת) — שימלאו
+     את מסגרת האפליקציה במקום להופיע בצד.
+     transform ללא !important — כדי שאנימציית slideUp תוכל לפעול. */
+  .hist-sheet,
+  .profile-sheet{
+    position:absolute!important;
+    top:0!important;right:0!important;bottom:0!important;left:0!important;
+    inset:0!important;
+    width:auto!important;
+    height:auto!important;
+    max-width:none!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    transform:none;
+  }
+  /* מסך גרף חודשי — מוזרק ל-body, ממוקם מרכזית מעל מסגרת האפליקציה */
+  .chart-screen{
+    position:fixed!important;
+    top:24px!important;
+    bottom:24px!important;
+    left:50%!important;
+    right:auto!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:var(--app-w)!important;
+    height:calc(100vh - 48px)!important;
+    border-radius:28px!important;
+    box-shadow:0 24px 72px -12px rgba(76,29,149,.25)!important;
+    overflow:hidden!important;
+    animation:deskFadeIn .25s ease!important;
+  }
+  /* שכבת קרני לייזר — עוקבת אחרי מסגרת האפליקציה */
+  .laser-beam-overlay{
+    position:fixed!important;
+    top:0!important;bottom:0!important;
+    left:50%!important;right:auto!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:var(--app-w)!important;
+  }
+}
+@keyframes deskFadeIn{from{opacity:0}to{opacity:1}}
+
+/* התאמת מיקום אייקוני העיטור הצפים כך שלא יחפפו את המסגרת הרחבה */
+@media(min-width:1200px){
+  body::before{right:calc(50% + var(--app-w)/2 + 60px)!important}
+  body::after{left:calc(50% + var(--app-w)/2 + 60px)!important}
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -12830,76 +12895,6 @@ function webInjectEditor(html){
 .promo-subnav-badge{background:rgba(212,165,116,0.25);color:#78350f;border:1px solid rgba(212,165,116,0.4);padding:2px 7px;border-radius:9px;font-size:10px;font-weight:800;font-variant-numeric:tabular-nums;font-family:inherit;letter-spacing:0}
 .promo-subnav-btn.on .promo-subnav-badge{background:rgba(212,165,116,0.25);color:#d4a574;border-color:rgba(212,165,116,0.4)}
 .promo-subnav-badge.done{background:#10b981;color:white;border-color:#10b981}
-
-/* ═══════════════════════════════════════════════════════════════════
-   תיקוני שולחן עבודה — מסך מלא לפנלים, גודל אפליקציה רחב יותר
-   ═══════════════════════════════════════════════════════════════════
-   חוקים אלו מופיעים בסוף הקובץ כדי לנצח על כפילויות מוקדמות יותר
-   של .hist-sheet / .profile-sheet / .chart-screen שהתנגשו עם פריסת
-   הדסקטופ ויצרו פאנל-צד מנותק במקום מסך מלא בתוך מסגרת האפליקציה. */
-@media(min-width:768px){:root{--app-w:680px}}
-@media(min-width:1200px){:root{--app-w:820px}}
-@media(min-width:1600px){:root{--app-w:940px}}
-
-@media(min-width:768px){
-  /* מבטיח ש-#app הוא ה-containing block לילדים אבסולוטיים גם אם
-     sticky נכשל ביצירת containing block בדפדפן מסוים */
-  #app{position:relative!important;top:auto!important}
-  #hist-panel-wrap{position:absolute!important;inset:0!important;z-index:300}
-  /* פנלים שמוזרקים בתוך #app (תורים + פרופיל מטופלת) — שיממלאו
-     את מסגרת האפליקציה במקום להישבר ולהופיע בצד. position:absolute
-     ביחס ל-#app.
-     הערה: transform ללא !important — כדי שאנימציית slideUp תוכל
-     לפעול בזמן הפתיחה, ובסיום תחזור ל-none. */
-  .hist-sheet,
-  .profile-sheet{
-    position:absolute!important;
-    top:0!important;right:0!important;bottom:0!important;left:0!important;
-    inset:0!important;
-    width:auto!important;
-    height:auto!important;
-    max-width:none!important;
-    border-radius:0!important;
-    box-shadow:none!important;
-    transform:none;
-  }
-  /* מסך גרף חודשי — מוזרק ל-body, אז נשאר fixed וממוקם
-     מרכזית מעל מסגרת האפליקציה. ביטלתי את אנימציית slideUp
-     כדי למנוע "קפיצה" של ציר X בסיום (translateX מתאפס) */
-  .chart-screen{
-    position:fixed!important;
-    top:24px!important;
-    bottom:24px!important;
-    left:50%!important;
-    right:auto!important;
-    transform:translateX(-50%)!important;
-    width:100%!important;
-    max-width:var(--app-w)!important;
-    height:calc(100vh - 48px)!important;
-    border-radius:28px!important;
-    box-shadow:0 24px 72px -12px rgba(76,29,149,.25)!important;
-    overflow:hidden!important;
-    animation:deskFadeIn .25s ease!important;
-  }
-  /* שכבת קרני לייזר — עוקבת אחרי מסגרת האפליקציה */
-  .laser-beam-overlay{
-    position:fixed!important;
-    top:0!important;bottom:0!important;
-    left:50%!important;right:auto!important;
-    transform:translateX(-50%)!important;
-    width:100%!important;
-    max-width:var(--app-w)!important;
-  }
-}
-@keyframes deskFadeIn{from{opacity:0}to{opacity:1}}
-
-/* התאמת מיקום אייקוני העיטור הצפים כך שלא יחפפו את המסגרת
-   הרחבה יותר של האפליקציה */
-@media(min-width:1200px){
-  body::before{right:calc(50% + var(--app-w)/2 + 60px)!important}
-  body::after{left:calc(50% + var(--app-w)/2 + 60px)!important}
-}
-
 </style>
 <scr`+`ipt data-webedit-tag="1">
 (function(){
