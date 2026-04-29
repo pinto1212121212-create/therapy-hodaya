@@ -2758,6 +2758,21 @@ textarea:focus-visible,
 @media(min-width:1200px){:root{--app-w:1000px}}
 @media(min-width:1600px){:root{--app-w:1180px}}
 
+/* Force #app's width with !important so any earlier rule that pinned
+   it to 430px / 600px / 720px cannot win. Variables resolve at use
+   time, but in some cascade situations the original max-width:430px
+   from line 491 was still being applied — !important removes any
+   ambiguity. Values match --app-w at each breakpoint. */
+@media(min-width:768px){
+  #app{max-width:760px!important;width:100%!important}
+}
+@media(min-width:1200px){
+  #app{max-width:1000px!important}
+}
+@media(min-width:1600px){
+  #app{max-width:1180px!important}
+}
+
 @media(min-width:768px){
   /* מבטיח ש-#app הוא ה-containing block לילדים אבסולוטיים גם אם
      sticky נכשל ביצירת containing block בדפדפן מסוים */
