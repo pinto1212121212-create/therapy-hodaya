@@ -499,8 +499,16 @@ button,input{font-family:inherit}
 @media(min-width:1200px){:root{--app-w:720px}}
 
 @media(min-width:768px){
-  body{background:linear-gradient(135deg,#ede9fe 0%,#e0e7ff 50%,#fae8ff 100%);display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;min-height:100vh}
-  #app{max-width:var(--app-w);border-radius:28px;box-shadow:0 24px 72px -12px rgba(76,29,149,.22),0 8px 24px -6px rgba(76,29,149,.12);min-height:calc(100vh - 48px);max-height:calc(100vh - 48px);overflow:hidden;position:sticky;top:24px;background:white}
+  body{
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(124,58,237,0.10), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 100% 100%, rgba(236,72,153,0.07), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 0% 100%, rgba(59,130,246,0.06), transparent 55%),
+      linear-gradient(135deg,#ede9fe 0%,#e0e7ff 50%,#fae8ff 100%);
+    background-attachment:fixed;
+    display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;min-height:100vh
+  }
+  #app{max-width:var(--app-w);border:1px solid rgba(124,58,237,0.08);border-radius:28px;box-shadow:0 24px 72px -12px rgba(76,29,149,.22),0 8px 24px -6px rgba(76,29,149,.12);min-height:calc(100vh - 48px);max-height:calc(100vh - 48px);overflow:hidden;position:sticky;top:24px;background:white}
   .content{overflow-y:auto;max-height:calc(100vh - 200px)}
   /* Inner content widens with the frame */
   .home{max-width:var(--app-w)}
@@ -3317,6 +3325,45 @@ const LOGIN_CSS=`
 .login-switch a{color:#fbab20;text-decoration:none;font-weight:700;cursor:pointer}
 .login-err{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#fca5a5;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:14px;text-align:center}
 .login-ok{background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.35);color:#86efac;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:14px;text-align:center}
+
+/* Desktop adaptation for the login overlay — scale the box and bring the canvas to life. */
+@media(min-width:768px){
+  /* Subtle radial gradient + dot grid so the dark canvas feels intentional, not empty. */
+  #login-screen{
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(251,171,32,0.08), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(124,58,237,0.10), transparent 60%),
+      linear-gradient(135deg,#1a1410 0%,#0a0805 100%);
+    padding:40px;
+  }
+  #login-screen::before{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background-image:radial-gradient(circle, rgba(251,171,32,0.04) 1px, transparent 1px);
+    background-size:24px 24px;
+    mask-image:radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 80%);
+  }
+  #login-screen::after{
+    content:'📖';position:absolute;font-size:180px;opacity:.04;pointer-events:none;
+    top:50%;right:calc(50% + 360px);transform:translateY(-50%);
+    animation:float 6s ease-in-out infinite;
+  }
+  .login-box{max-width:520px;padding:44px 40px;border-radius:24px;border-width:1.5px;box-shadow:0 32px 80px rgba(0,0,0,0.6),0 8px 24px rgba(251,171,32,0.08),inset 0 1px 0 rgba(251,171,32,0.18);position:relative;z-index:1}
+  .login-title{font-size:32px;margin-bottom:8px}
+  .login-sub{font-size:15px;margin-bottom:28px}
+  .login-field{margin-bottom:16px}
+  .login-field label{font-size:14px;margin-bottom:8px}
+  .login-field input{padding:14px 16px;font-size:16px;border-radius:12px}
+  .login-btn{padding:16px;font-size:17px;border-radius:14px;transition:transform .15s ease,box-shadow .15s ease}
+  .login-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 32px rgba(251,171,32,0.4)}
+  .login-switch{font-size:14px;margin-top:22px}
+  .login-field input:focus-visible{outline:2px solid #fbab20;outline-offset:2px}
+}
+@media(min-width:1200px){
+  .login-box{max-width:560px;padding:52px 48px}
+  .login-title{font-size:36px}
+  #login-screen::after{font-size:220px;right:calc(50% + 420px)}
+}
 </style>`;
 
 function showLogin(mode='signin'){
